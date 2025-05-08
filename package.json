@@ -2,11 +2,13 @@
   "name": "proyecto-back-integrador",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "dev": "ts-node-dev   src/app.ts",
-    "start": "node build/app.js",
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+"scripts": {
+  "dev": "ts-node-dev src/app.ts",
+  "start": "node build/app.js",
+  "clean": "rm -rf build",
+  "build": "npm run clean && tsc",
+  "test": "echo \"Error: no test specified\" && exit 1"
+}
   },
   "keywords": [],
   "author": "",
