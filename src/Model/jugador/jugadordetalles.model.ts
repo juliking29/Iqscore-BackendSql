@@ -1,4 +1,3 @@
-
 import { pool } from '../../config/database';
 import JugadorDetalles from "../../interfaces/juagdor interfaces/juagadordetalles.intefaces";
 import HistorialEquipo from '../../interfaces/juagdor interfaces/historialjuagdor.intefaces';
@@ -10,11 +9,11 @@ export default class JugadorModel {
     public static async obtenerDetallesPorId(id: number): Promise<JugadorDetalles | null> {
         try {
             const [rows]: any = await pool.query(
-                `SELECT j.*, e.nombre as equipo_actual, l.nombre as liga
-                FROM JUGADORES j
-                LEFT JOIN EQUIPOS e ON j.idEquipoActual = e.idEquipo
-                LEFT JOIN LIGAS l ON e.idLiga = l.idLiga
-                WHERE j.idJugador = ?`,
+                `SELECT j.*, e.nombre AS equipo_actual, l.nombre AS liga
+                 FROM JUGADORES j
+                 LEFT JOIN EQUIPOS e ON j.idEquipoActual = e.idEquipo
+                 LEFT JOIN LIGAS l ON e.idLiga = l.idLiga
+                 WHERE j.idJugador = ?`,
                 [id]
             );
             return rows.length > 0 ? rows[0] : null;
@@ -28,10 +27,10 @@ export default class JugadorModel {
     public static async obtenerHistorialEquipos(id: number): Promise<HistorialEquipo[]> {
         try {
             const [rows]: any = await pool.query(
-                `SELECT idJugador, nombre_equipo, año_inicio, año_fin
-                FROM EQUIPOS_JUGADOR
-                WHERE idJugador = ?
-                ORDER BY año_inicio DESC`,
+                `SELECT idJugador, nombre_equipo, año_inicio, año_fin, foto_equipo
+                 FROM EQUIPOS_JUGADOR
+                 WHERE idJugador = ?
+                 ORDER BY año_inicio DESC`,
                 [id]
             );
             return rows;
@@ -46,9 +45,9 @@ export default class JugadorModel {
         try {
             const [rows]: any = await pool.query(
                 `SELECT idJugador, nombre_titulo, año
-                FROM TITULOS_JUGADORES
-                WHERE idJugador = ?
-                ORDER BY año DESC`,
+                 FROM TITULOS_JUGADORES
+                 WHERE idJugador = ?
+                 ORDER BY año DESC`,
                 [id]
             );
             return rows;
@@ -57,14 +56,14 @@ export default class JugadorModel {
         }
     }
 
-    // Método para agregar un nuevo equipo al historial del jugador
-    // Method to add a new team to the player's history
+    // Método para agregar un nuevo equipo al historial del jugador (con foto)
+    // Method to add a new team to the player's history (with photo)
     public static async agregarHistorialEquipo(idJugador: number, historial: HistorialEquipo): Promise<void> {
         try {
             await pool.query(
-                `INSERT INTO EQUIPOS_JUGADOR (idJugador, nombre_equipo, año_inicio, año_fin)
-                VALUES (?, ?, ?, ?)`,
-                [idJugador, historial.nombre_equipo, historial.año_inicio, historial.año_fin]
+                `INSERT INTO EQUIPOS_JUGADOR (idJugador, nombre_equipo, año_inicio, año_fin, foto_equipo)
+                 VALUES (?, ?, ?, ?, ?)`,
+                [idJugador, historial.nombre_equipo, historial.año_inicio, historial.año_fin, historial.foto_equipo]
             );
         } catch (error) {
             throw new Error(`Error al agregar historial de equipo: ${error}`);
@@ -77,7 +76,7 @@ export default class JugadorModel {
         try {
             await pool.query(
                 `INSERT INTO TITULOS_JUGADORES (idJugador, nombre_titulo, año)
-                VALUES (?, ?, ?)`,
+                 VALUES (?, ?, ?)`,
                 [idJugador, titulo.nombre_titulo, titulo.año]
             );
         } catch (error) {
@@ -91,7 +90,7 @@ export default class JugadorModel {
         try {
             await pool.query(
                 `DELETE FROM EQUIPOS_JUGADOR
-                WHERE idJugador = ? AND nombre_equipo = ?`,
+                 WHERE idJugador = ? AND nombre_equipo = ?`,
                 [idJugador, nombreEquipo]
             );
         } catch (error) {
@@ -105,7 +104,7 @@ export default class JugadorModel {
         try {
             await pool.query(
                 `DELETE FROM TITULOS_JUGADORES
-                WHERE idJugador = ? AND nombre_titulo = ?`,
+                 WHERE idJugador = ? AND nombre_titulo = ?`,
                 [idJugador, nombreTitulo]
             );
         } catch (error) {
