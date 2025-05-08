@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import EquiposModel from '../../model/ModuloAdministardor/equipos.model';
+import EquiposModel from '../../Model/ModuloAdministardor/equipos.model';
 
 export default class EquiposController {
 
